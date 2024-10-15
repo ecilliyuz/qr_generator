@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Kod Oluşturucu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin-top: 50px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #qrCode img {
+            margin-top: 20px;
+        }
+
+        #printButton {
+            display: block;
+            margin: 10px auto 0;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>QR Kod Oluşturucu</h1>
+    <div id="container">
+        <input type="text" id="textInput" placeholder="QR Kodu için metin girin">
+        <button onclick="generateQRCode()">QR Kod Oluştur</button>
+
+        <div id="qrCode"></div>
+
+        <button id="printButton" onclick="printQRCode()" style="display:none;">Yazdır</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script>
+        function generateQRCode() {
+            const text = document.getElementById("textInput").value;
+            if (text) {
+                QRCode.toDataURL(text, { width: 256, margin: 2 }, function (err, url) {
+                    if (err) throw err;
+                    document.getElementById("qrCode").innerHTML = `<img src="${url}" alt="QR Code">`;
+                    document.getElementById("printButton").style.display = "block";
+                });
+            }
+        }
+
+        function printQRCode() {
+            const qrCodeElement = document.getElementById("qrCode").innerHTML;
+            const printWindow = window.open('', '', 'height=400,width=400');
+            printWindow.document.write('<html><head><title>QR Kod</title></head><body>');
+            printWindow.document.write(qrCodeElement);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        }
+    </script>
+
+</body>
+</html>
